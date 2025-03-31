@@ -1,0 +1,8 @@
+applicationType: plugin
+defaultPackage: grails6pluginsample
+testFramework: spock
+sourceLanguage: groovy
+buildTool: gradle
+gormImpl: gorm-hibernate5
+servletImpl: spring-boot-starter-tomcat
+features: [app-name, base, gorm-hibernate5, gradle, grails-application, grails-console, grails-dependencies, grails-gorm-testing-support, grails-gradle-plugin, h2, logback, micronaut-inject-groovy, readme, spock, spring-boot-autoconfigure, spring-boot-starter, yaml]

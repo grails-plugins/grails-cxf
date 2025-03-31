@@ -1,105 +1,133 @@
-buildscript {
-	ext {
-		grailsVersion = project.grailsVersion
-	}
-	repositories {
-		mavenLocal()
-		maven { url "https://repo.grails.org/grails/core" }
-	}
-	dependencies {
-		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-	}
+plugins {
+    id "groovy"
+    id "war"
+    id "idea"
+    id "org.grails.grails-plugin"
+    id "eclipse"
+    id "com.gorylenko.gradle-git-properties"
+    id "maven-publish"
 }
 
-version "3.1.2"
 group "org.grails.plugins"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
-
-ext {
-	grailsVersion = project.grailsVersion
-	gradleWrapperVersion = project.gradleWrapperVersion
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
-	mavenLocal()
-	mavenCentral()
-	maven { url "https://repo.grails.org/grails/core" }
+    mavenCentral()
+    maven { url "https://repo.grails.org/grails/core/" }
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.grails:grails-bom:$grailsVersion"
-	}
-	applyMavenExclusions false
+configurations {
+    all {
+    }
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.grails:grails-core"
+    implementation("org.grails:grails-core")
+    implementation("org.grails:grails-logging")
+    implementation("org.grails:grails-web-boot")
+    implementation("org.springframework.boot:spring-boot-autoconfigure")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    compileOnly("io.micronaut:micronaut-inject-groovy")
+    console("org.grails:grails-console")
+    testImplementation("io.micronaut:micronaut-inject-groovy")
+    testImplementation("org.grails:grails-gorm-testing-support")
+    testImplementation("org.spockframework:spock-core")
+    testImplementation("io.micronaut:micronaut-http-client")
 
-	provided "org.grails:grails-web-boot"
-	provided "org.grails:grails-dependencies"
-	provided 'javax.servlet:javax.servlet-api:3.1.0'
-
-    console "org.grails:grails-console"
-
-    profile "org.grails.profiles:plugin"
-
-	compile 'org.apache.commons:commons-lang3:3.4'
-	compile 'org.apache.cxf:cxf-core:3.1.8'
-	compile 'org.apache.cxf:cxf-rt-frontend-jaxws:3.1.8'
-	compile 'org.apache.cxf:cxf-rt-frontend-jaxrs:3.1.8'
-	compile 'org.apache.cxf:cxf-rt-transports-http:3.1.8'
-
-	testCompile "org.grails:grails-plugin-testing"
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation "org.apache.cxf:cxf-core:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = gradleWrapperVersion
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
 }
 
-grailsPublish {
-    githubSlug = 'Grails-Plugin-Consortium/grails-cxf'
-    license {
-        name = 'Apache-2.0'
+tasks.withType(GroovyCompile) {
+    configure(groovyOptions) {
+        forkOptions.jvmArgs = ['-Xmx1024m']
     }
-    title = "Grails CXF Plugin"
-    desc = "Grails CXF Plugin"
-    developers = [acetrike: "Christian Oestreich",
-                  'ryan.j.crum': "Ryan Crum",
-                  crafsman: "Ben Doerr"]
-
-    portalUser = ""
-    portalPassword = ""
 }
 
-bintray {
-	user = System.getenv("BINTRAY_USER") ?: project.hasProperty("bintrayUser") ? project.bintrayUser : ''
-	key = System.getenv("BINTRAY_KEY") ?: project.hasProperty("bintrayKey") ? project.bintrayKey : ''
-	publications = ['maven']
-	pkg {
-		repo = 'grails-plugins'
-		userOrg = 'ctoestreich'
-		name = "cxf"
-		desc = "Grails CXF Plugin"
-		websiteUrl = "http://grails.org/plugin/grails-cxf"
-		issueTrackerUrl = "https://github.com/Grails-Plugin-Consortium/grails-cxf/issues"
-		vcsUrl = "https://github.com/Grails-Plugin-Consortium/grails-cxf"
-		licenses = ['Apache-2.0']
-		publicDownloadNumbers = true
-	}
+tasks.withType(Test) {
+    useJUnitPlatform()
 }
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task packageJavadoc(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+task packageGroovydoc(type: Jar) {
+    from groovydoc
+    classifier = 'groovydoc'
+}
+
+gitProperties {
+    keys = ['git.branch', 'git.commit.id', 'git.commit.time', 'git.commit.id.abbrev']
+    failOnNoGitDirectory = true
+    extProperty = 'gitProps' // git properties will be put in a map at project.ext.gitProps
+}
+
+generateGitProperties.outputs.upToDateWhen { false } // make sure the generateGitProperties task always executes (even when git.properties is not changed)
 
 jar {
-	exclude 'org/grails/cxf/test/**'
+    dependsOn generateGitProperties
+    manifest {
+        attributes("Built-By": System.getProperty("user.name"))
+        attributes(["Plugin-Version"        : version,
+                    "Plugin-Title"          : project.name,
+                    "Plugin-Build-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    "Git-Commit"            : "${-> project.ext.gitProps['git.commit.id.abbrev']}",
+                    "Git-Branch"            : "${-> project.ext.gitProps['git.branch']}",
+                    "Published-By"          : project.findProperty("nexusUsername") ?: System.getenv("NEXUS_USERNAME")])
+    }
+    from sourceSets.main.output
+    exclude 'git.properties'
 }
 
-bintrayUpload.dependsOn sourcesJar, javadocJar
+publishing {
+
+    publications {
+        mavenJar(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            artifact packageJavadoc
+            artifact packageGroovydoc
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/vsachinv/grails-cxf")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+        maven {
+            name = "NexusRepo"
+            credentials {
+                username project.findProperty("nexusUsername") ?: System.getenv("NEXUS_USERNAME")
+                password project.findProperty("nexusPassword") ?: System.getenv("NEXUS_PASSWORD")
+            }
+            url project.findProperty("nexusUrl") ?: System.getenv("NEXUS_URL")
+            allowInsecureProtocol = project.findProperty("isNexusUrlInsecure") ? true : false
+        }
+    }
+}
+
+// enable if you wish to package this plugin as a standalone application
+bootJar.enabled = false
+
+bootRun.onlyIf { false }

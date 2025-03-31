@@ -2,17 +2,46 @@
 
 <a name="Top"></a>
 
-The docs for the 2.x branch can be found [here](https://github.com/Grails-Plugin-Consortium/grails-cxf/tree/grails-2). A lot of the previous documentation is somewhat applicable, but I will be creating new docs in the coming weeks.
+The docs for the 2.x branch can be found [here](https://github.com/Grails-Plugin-Consortium/grails-cxf/tree/grails-2) and grails 3.x branch can be found [here](https://github.com/Grails-Plugin-Consortium/grails-cxf/tree/master). A lot of the previous documentation is somewhat applicable, but I will be creating new docs in the coming weeks.
   
 Grails CXF Plugin
 =========
 
-The 3.x branch of the plugin is a grails plugin that contains simplified features to get simple soap endpoints exposed in grails 3 applications.
+The 6.x branch of the plugin is a grails plugin that contains simplified features to get simple soap endpoints exposed in grails 6 applications.
 
 Getting Started
 -----------
 
-At the core, this plugin is a simple wrapper for geeting grails service classes wired up as direct soap endpoints.  As many of the previous features from the 2.x branch as could be ported for the initial release were ported.  There will be continued support added for the more complex CXF features going forward.
+At the core, this plugin is a simple wrapper for getting grails service classes wired up as direct soap endpoints. All the previous features from the 3.x branch were ported.  There will be continued support added for the more complex CXF features going forward.
+
+Installation
+-----------
+
+Grails 3.x:
+```groovy
+compile 'org.grails.plugins:cxf:3.1.2'
+```
+
+Grails 6.x:
+```groovy
+implemenation 'org.grails.plugins:cxf:6.0-JDK11-M1'
+```
+In addition if you want to use github package registry:
+
+```groovy
+repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/vsachinv/grails-cxf")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    
+```
+
  
 Basic Usage
 ---------

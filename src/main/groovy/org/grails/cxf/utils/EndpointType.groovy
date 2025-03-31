@@ -1,8 +1,10 @@
 package org.grails.cxf.utils
 
+import groovy.transform.CompileStatic
 import org.apache.cxf.endpoint.AbstractEndpointFactory
 import org.apache.cxf.jaxws.JaxWsServerFactoryBean
 
+@CompileStatic
 public enum EndpointType {
 	JAX_WS(JaxWsServerFactoryBean.class);
 
