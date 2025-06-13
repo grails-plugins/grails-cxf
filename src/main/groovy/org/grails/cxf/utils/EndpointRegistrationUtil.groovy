@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext
 
 import javax.xml.XMLConstants
 import javax.xml.namespace.QName
-import javax.xml.ws.soap.SOAPBinding
+import jakarta.xml.ws.soap.SOAPBinding
 
 @Slf4j
 @CompileStatic
