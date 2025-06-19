@@ -7,12 +7,13 @@ buildscript {
 		maven { url "https://repo.grails.org/grails/core" }
 	}
 	dependencies {
-		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+		classpath "org.apache.grails:grails-gradle-plugins:$grailsVersion"
 	}
 }
 
 plugins {
 	id 'maven-publish'
+	id "com.github.ben-manes.versions" version "$benManesVersion"
 }
 
 version "4.0.0-SNAPSHOT"
@@ -20,7 +21,7 @@ group "org.grails.plugins"
 
 apply plugin:"eclipse"
 apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
+apply plugin: 'org.apache.grails.gradle.grails-plugin'
 
 ext {
 	grailsVersion = project.grailsVersion
@@ -35,21 +36,21 @@ repositories {
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-logging"
 	implementation "org.springframework.boot:spring-boot-autoconfigure"
-	implementation "org.grails:grails-core"
+	implementation "org.apache.grails:grails-core"
 
-	runtimeOnly "org.grails:grails-web-boot"
-	runtimeOnly "org.grails:grails-dependencies"
+	runtimeOnly "org.apache.grails:grails-web-boot"
+	runtimeOnly "org.apache.grails:grails-dependencies"
 	runtimeOnly "javax.servlet:javax.servlet-api:4.0.1"
 
-    console "org.grails:grails-console"
+    console "org.apache.grails:grails-console"
 
-    profile "org.grails.profiles:plugin"
+    profile "org.apache.grails.profiles:plugin"
 
 	implementation 'org.apache.commons:commons-lang3:3.17.0'
-	implementation 'org.apache.cxf:cxf-core:4.1.1'
-	implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:4.1.1'
-	implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.1.1'
-	implementation 'org.apache.cxf:cxf-rt-transports-http:4.1.1'
+	implementation 'org.apache.cxf:cxf-core:4.1.2'
+	implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:4.1.2'
+	implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.1.2'
+	implementation 'org.apache.cxf:cxf-rt-transports-http:4.1.2'
 
 	testImplementation "org.spockframework:spock-core"
 }
