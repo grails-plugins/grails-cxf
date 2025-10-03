@@ -4,23 +4,25 @@ buildscript {
 	}
 	repositories {
 		mavenLocal()
-		maven { url "https://repo.grails.org/grails/core" }
+		maven {
+            url = "https://repo.grails.org/grails/core"
+        }
 	}
 	dependencies {
-		classpath "org.apache.grails:grails-gradle-plugins:$grailsVersion"
+		classpath "org.apache.grails:grails-gradle-plugins:${grailsVersion}"
 	}
 }
 
 plugins {
+    id 'eclipse'
+    id 'idea'
 	id 'maven-publish'
-	id "com.github.ben-manes.versions" version "$benManesVersion"
+	id "com.github.ben-manes.versions" version "${benManesVersion}"
 }
 
-version "4.0.0-SNAPSHOT"
-group "org.grails.plugins"
+version = "4.0.0-SNAPSHOT"
+group = "org.grails.plugins"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
 apply plugin: 'org.apache.grails.gradle.grails-plugin'
 
 ext {
@@ -30,7 +32,9 @@ ext {
 repositories {
 	mavenLocal()
 	mavenCentral()
-	maven { url "https://repo.grails.org/grails/core" }
+	maven {
+        url = "https://repo.grails.org/grails/core"
+    }
 }
 
 dependencies {
@@ -39,18 +43,18 @@ dependencies {
 	implementation "org.apache.grails:grails-core"
 
 	runtimeOnly "org.apache.grails:grails-web-boot"
-	runtimeOnly "org.apache.grails:grails-dependencies"
-	runtimeOnly "javax.servlet:javax.servlet-api:4.0.1"
+	runtimeOnly "org.apache.grails:grails-dependencies-starter-web"
+	runtimeOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
 
     console "org.apache.grails:grails-console"
 
     profile "org.apache.grails.profiles:plugin"
 
-	implementation 'org.apache.commons:commons-lang3:3.17.0'
-	implementation 'org.apache.cxf:cxf-core:4.1.2'
-	implementation 'org.apache.cxf:cxf-rt-frontend-jaxws:4.1.2'
-	implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs:4.1.2'
-	implementation 'org.apache.cxf:cxf-rt-transports-http:4.1.2'
+	implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+	implementation "org.apache.cxf:cxf-core:${cxfVersion}"
+	implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+	implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+	implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
 
 	testImplementation "org.spockframework:spock-core"
 }
