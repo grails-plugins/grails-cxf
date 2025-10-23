@@ -1,0 +1,8 @@
+repositories {
+    mavenCentral()
+    maven { url "https://repo.grails.org/grails/core/" }
+}
+dependencies {
+    implementation("org.grails:grails-gradle-plugin:6.1.2")
+    implementation "com.gorylenko.gradle-git-properties:gradle-git-properties:2.4.2"
+}

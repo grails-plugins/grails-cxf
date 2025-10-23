@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 
 @Slf4j
 class CxfGrailsPlugin extends Plugin {
-    def grailsVersion = "3.1.0 > *"
+    def grailsVersion = "6.0.0 > *"
     def pluginExcludes = [
             'grails-app/views/error.gsp',
             'grails-app/conf/spring/ApplicationResources.groovy',
@@ -41,7 +41,8 @@ class CxfGrailsPlugin extends Plugin {
     def developers = [
             [name: "Christian Oestreich", email: "acetrike@gmail.com"],
             [name: "Ryan Crum", email: "ryan.j.crum@gmail.com"],
-            [name: "Ben Doerr", email: "craftsman@bendoerr.me"]]
+            [name: "Ben Doerr", email: "craftsman@bendoerr.me"],
+            [name: "Sachin Verma", email: "sachin.verma@rxlogix.com"]]
 
     def documentation = "http://grails.org/plugin/grails-cxf"
     def license = "APACHE"
