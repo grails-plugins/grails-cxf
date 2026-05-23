@@ -20,7 +20,7 @@ plugins {
 	id "com.github.ben-manes.versions" version "${benManesVersion}"
 }
 
-version = "5.0.0-SNAPSHOT"
+version = projectVersion
 group = "org.grails.plugins"
 
 apply plugin: 'org.apache.grails.gradle.grails-plugin'
