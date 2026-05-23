@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 
 @Slf4j
 class CxfGrailsPlugin extends Plugin {
-    def grailsVersion = "3.1.0 > *"
+    def grailsVersion = "7.0.0 > *"
     def pluginExcludes = [
             'grails-app/views/error.gsp',
             'grails-app/conf/spring/ApplicationResources.groovy',
@@ -33,7 +33,7 @@ class CxfGrailsPlugin extends Plugin {
     ]
 
     def name = "cxf"
-    def author = 'Grails Plugin Consortium'
+    def author = 'Grails Plugins'
     def authorEmail = ''
     def title = 'CXF plug-in for Grails'
     def description = 'Brings easy exposure of service and endpoint classes as Apache CXF SOAP Services to Grails.'
@@ -43,10 +43,10 @@ class CxfGrailsPlugin extends Plugin {
             [name: "Ryan Crum", email: "ryan.j.crum@gmail.com"],
             [name: "Ben Doerr", email: "craftsman@bendoerr.me"]]
 
-    def documentation = "http://grails.org/plugin/grails-cxf"
+    def documentation = "https://github.com/grails-plugins/grails-cxf"
     def license = "APACHE"
-    def issueManagement = [system: "GITHUB", url: "https://github.com/Grails-Plugin-Consortium/grails-cxf/issues"]
-    def scm = [url: "https://github.com/Grails-Plugin-Consortium/grails-cxf"]
+    def issueManagement = [system: "GITHUB", url: "https://github.com/grails-plugins/grails-cxf/issues"]
+    def scm = [url: "https://github.com/grails-plugins/grails-cxf"]
 
     Closure doWithSpring() {
         { ->
