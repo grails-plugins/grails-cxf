@@ -1,0 +1,110 @@
+name: "CI"
+on:
+  push:
+    branches:
+      - '[0-9]+.[0-9]+.x'
+      - 'main'
+  pull_request:
+  workflow_dispatch:
+env:
+  JAVA_DISTRIBUTION: 'liberica'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  build:
+    name: "Build & Test"
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "Output Agent IP" # in the event your agent has network issues, you can use this to debug
+        run: curl -s https://api.ipify.org
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v6
+      - name: "Export .sdkmanrc properties"
+        uses: apache/grails-github-actions/export-gradle-properties@asf
+        with:
+          file: ".sdkmanrc"
+          prefix: "SDKMANRC_"
+      - name: "Determine Java Version"
+        run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
+      - name: "☕️ Setup JDK"
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.SDKMANRC_java }}
+      - name: 'Ensure Common Build Date' # to ensure a reproducible build
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
+      - name: "Export gradle.properties properties"
+        uses: apache/grails-github-actions/export-gradle-properties@asf
+      - name: "🐘 Setup Gradle"
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: ${{ env.ciBuildScanPublish }}
+          build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
+          build-scan-terms-of-use-agree: ${{ env.ciBuildScanTermsOfUseAgree }}
+      - name: "🔨 Build project without tests"
+        if: ${{ contains(github.event.head_commit.message, '[skip tests]') }}
+        run: >
+          ./gradlew build
+          --continue
+          --stacktrace
+          -PskipTests
+          -PskipCodeStyle
+      - name: "🔨 Build project with tests"
+        if: ${{ !contains(github.event.head_commit.message, '[skip tests]') }}
+        run: >
+          ./gradlew build
+          --continue
+          --stacktrace
+          --rerun-tasks
+          -PskipCodeStyle
+  publish:
+    # only run the publishing task on this repo (not on forks)
+    if: github.repository_owner == 'grails-plugins' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: build
+    name: "Publish Snapshot"
+    runs-on: ubuntu-24.04
+    steps:
+      - name: "Output Agent IP" # in the event your agent has network issues, you can use this to debug
+        run: curl -s https://api.ipify.org
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v6
+      - name: "Export .sdkmanrc properties"
+        uses: apache/grails-github-actions/export-gradle-properties@asf
+        with:
+          file: ".sdkmanrc"
+          prefix: "SDKMANRC_"
+      - name: "Determine Java Version"
+        run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
+      - name: "☕️ Setup JDK"
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.SDKMANRC_java }}
+      - name: 'Ensure Common Build Date' # to ensure a reproducible build
+        run: echo "SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)" >> "$GITHUB_ENV"
+      - name: "Export gradle.properties properties"
+        uses: apache/grails-github-actions/export-gradle-properties@asf
+      - name: "🐘 Setup Gradle"
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          build-scan-publish: ${{ env.ciBuildScanPublish }}
+          build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
+          build-scan-terms-of-use-agree: ${{ env.ciBuildScanTermsOfUseAgree }}
+      - name: "📤 Publish Snapshot Artifacts"
+        env:
+          GRAILS_PUBLISH_RELEASE: 'false'
+          MAVEN_PUBLISH_URL: 'https://central.sonatype.com/repository/maven-snapshots/'
+          MAVEN_PUBLISH_USERNAME: ${{ secrets.NEXUS_PUBLISH_USERNAME }}
+          MAVEN_PUBLISH_PASSWORD: ${{ secrets.NEXUS_PUBLISH_PASSWORD }}
+        run: >
+          ./gradlew publish
+          --no-build-cache
+          --rerun-tasks
+      - name: "📜 Generate Documentation"
+        run: ./gradlew asciidoctor
+      - name: "🚀 Publish to Github Pages"
+        uses: apache/grails-github-actions/deploy-github-pages@asf
+        env:
+          GRADLE_PUBLISH_RELEASE: 'false'
+          SOURCE_FOLDER: build/docs/manual
