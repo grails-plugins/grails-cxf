@@ -1,9 +1,3 @@
-[![Build Status](https://travis-ci.org/Grails-Plugin-Consortium/grails-cxf.png?branch=master)](https://travis-ci.org/Grails-Plugin-Consortium/grails-cxf)
-
-<a name="Top"></a>
-
-The docs for the 2.x branch can be found [here](https://github.com/Grails-Plugin-Consortium/grails-cxf/tree/grails-2). A lot of the previous documentation is somewhat applicable, but I will be creating new docs in the coming weeks.
-  
 Grails CXF Plugin
 =========
 
@@ -341,11 +335,6 @@ Demo Project
 ---------
 https://github.com/Grails-Plugin-Consortium/grails-cxf-demo
 
-
-
-
-<p align="right"><a href="#Top">Top</a></p>
-<a name="License"></a>
 LICENSE
 ---------------
 

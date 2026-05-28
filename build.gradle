@@ -4,102 +4,73 @@ buildscript {
 	}
 	repositories {
 		mavenLocal()
-		maven { url "https://repo.grails.org/grails/core" }
+		maven {
+            url = "https://repo.grails.org/grails/core"
+        }
 	}
 	dependencies {
-		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+		classpath "org.apache.grails:grails-gradle-plugins:${grailsVersion}"
 	}
 }
 
-version "3.1.2"
-group "org.grails.plugins"
+plugins {
+    id 'eclipse'
+    id 'idea'
+	id 'maven-publish'
+	id "com.github.ben-manes.versions" version "${benManesVersion}"
+}
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"org.grails.grails-plugin"
-apply plugin:"org.grails.grails-plugin-publish"
+version = projectVersion
+group = "org.grails.plugins"
+
+apply plugin: 'org.apache.grails.gradle.grails-plugin'
 
 ext {
 	grailsVersion = project.grailsVersion
-	gradleWrapperVersion = project.gradleWrapperVersion
 }
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
 	mavenLocal()
 	mavenCentral()
-	maven { url "https://repo.grails.org/grails/core" }
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.grails:grails-bom:$grailsVersion"
-	}
-	applyMavenExclusions false
+	maven {
+        url = "https://repo.grails.org/grails/core"
+    }
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.grails:grails-core"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+	implementation "org.springframework.boot:spring-boot-autoconfigure"
+	implementation "org.apache.grails:grails-core"
 
-	provided "org.grails:grails-web-boot"
-	provided "org.grails:grails-dependencies"
-	provided 'javax.servlet:javax.servlet-api:3.1.0'
+	runtimeOnly "org.apache.grails:grails-web-boot"
+	runtimeOnly "org.apache.grails:grails-dependencies-starter-web"
+	runtimeOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
 
-    console "org.grails:grails-console"
+    console "org.apache.grails:grails-console"
 
-    profile "org.grails.profiles:plugin"
+    profile "org.apache.grails.profiles:plugin"
 
-	compile 'org.apache.commons:commons-lang3:3.4'
-	compile 'org.apache.cxf:cxf-core:3.1.8'
-	compile 'org.apache.cxf:cxf-rt-frontend-jaxws:3.1.8'
-	compile 'org.apache.cxf:cxf-rt-frontend-jaxrs:3.1.8'
-	compile 'org.apache.cxf:cxf-rt-transports-http:3.1.8'
+	implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+	implementation "org.apache.cxf:cxf-core:${cxfVersion}"
+	implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+	implementation "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+	implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
 
-	testCompile "org.grails:grails-plugin-testing"
+	testImplementation "org.spockframework:spock-core"
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = gradleWrapperVersion
-}
-
-grailsPublish {
-    githubSlug = 'Grails-Plugin-Consortium/grails-cxf'
-    license {
-        name = 'Apache-2.0'
-    }
-    title = "Grails CXF Plugin"
-    desc = "Grails CXF Plugin"
-    developers = [acetrike: "Christian Oestreich",
-                  'ryan.j.crum': "Ryan Crum",
-                  crafsman: "Ben Doerr"]
-
-    portalUser = ""
-    portalPassword = ""
-}
-
-bintray {
-	user = System.getenv("BINTRAY_USER") ?: project.hasProperty("bintrayUser") ? project.bintrayUser : ''
-	key = System.getenv("BINTRAY_KEY") ?: project.hasProperty("bintrayKey") ? project.bintrayKey : ''
-	publications = ['maven']
-	pkg {
-		repo = 'grails-plugins'
-		userOrg = 'ctoestreich'
-		name = "cxf"
-		desc = "Grails CXF Plugin"
-		websiteUrl = "http://grails.org/plugin/grails-cxf"
-		issueTrackerUrl = "https://github.com/Grails-Plugin-Consortium/grails-cxf/issues"
-		vcsUrl = "https://github.com/Grails-Plugin-Consortium/grails-cxf"
-		licenses = ['Apache-2.0']
-		publicDownloadNumbers = true
-	}
+tasks.withType(Test) {
+	useJUnitPlatform()
 }
 
 jar {
 	exclude 'org/grails/cxf/test/**'
 }
 
-bintrayUpload.dependsOn sourcesJar, javadocJar
+publishing {
+	publications {
+		library(MavenPublication) {
+			from components.java
+		}
+	}
+}
