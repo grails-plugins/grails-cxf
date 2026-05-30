@@ -4,13 +4,32 @@
 The **5.x** branch of the plugin is an [Apache Grails](https://grails.apache.org/) plugin that contains simplified features to get simple SOAP endpoints
 exposed in Grails 7.x applications using [Apache CXF](https://cxf.apache.org/).
 
-## Getting Started
+## 🚀 Getting Started
 
 At the core, this plugin is a simple wrapper for getting Grails service classes wired up as direct SOAP endpoints.
 As many of the previous features from the 2.x branch as could be ported for the initial release were ported.
 There will be continued support added for the more complex CXF features going forward.
- 
-## Basic Usage
+
+Add the following to your `build.gradle` file
+
+### Grails 7
+Not yet released, you will have to do a `./gradlew publishToMavenLocal` first, and then add the dependency:
+
+```groovy
+implementation 'org.grails.plugins:cxf:4.0.0-SNAPSHOT'
+```
+
+### Grails 5, 6
+```groovy
+compile 'org.grails.plugins:cxf:3.1.2'
+```
+
+### Grails 3, 4
+```groovy
+compile 'org.grails.plugins:cxf:3.1.2'
+```
+
+## 📖 Basic Usage
 
 Exposing a service class is as simple as adding the `GrailsCxfEndpoint` annotation and annotating the methods you wish to expose in the service with `WebMethod` and `WebResult`
 
@@ -100,8 +119,6 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.logging.Logger
 
-/**
- */
 @NoJSR250Annotations
 class CustomLoggingInInterceptor extends AbstractLoggingInterceptor {
 
