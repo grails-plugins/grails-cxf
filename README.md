@@ -16,7 +16,7 @@ Add the following to your `build.gradle` file
 Not yet released, you will have to do a `./gradlew publishToMavenLocal` first, and then add the dependency:
 
 ```groovy
-implementation 'org.grails.plugins:cxf:4.0.0-SNAPSHOT'
+implementation 'org.grails.plugins:cxf:5.0.0-RC1'
 ```
 
 ### Grails 5, 6
