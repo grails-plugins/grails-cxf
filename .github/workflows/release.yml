@@ -134,54 +134,10 @@ jobs:
           ./gradlew
           findSonatypeStagingRepository
           releaseSonatypeStagingRepository
-  docs:
-    environment: docs # this step will be delayed until approved
-    name: "Publish Documentation"
-    needs: [ publish, release ]
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write # required to publish documentation to GitHub pages branches
-    steps:
-      - name: "📝 Establish release version"
-        run: echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
-      - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ env.TAG }}
-      - name: "Export .sdkmanrc properties"
-        uses: apache/grails-github-actions/export-gradle-properties@asf
-        with:
-          file: ".sdkmanrc"
-          prefix: "SDKMANRC_"
-      - name: "Determine Java Version"
-        run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
-      - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.SDKMANRC_java }}
-      - name: "Export gradle.properties properties"
-        uses: apache/grails-github-actions/export-gradle-properties@asf
-      - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
-        with:
-          build-scan-publish: ${{ env.ciBuildScanPublish }}
-          build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
-          build-scan-terms-of-use-agree: ${{ env.ciBuildScanTermsOfUseAgree }}
-      - name: "🔨 Build Documentation"
-        run: ./gradlew docs
-      - name: "🚀 Publish to Github Pages"
-        uses: apache/grails-github-actions/deploy-github-pages@asf
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GRADLE_PUBLISH_RELEASE: 'true'
-          SOURCE_FOLDER: build/docs
-          VERSION: ${{ env.VERSION }}
   close:
     name: "To Next Version"
     environment: close # this step will be delayed until approved
-    needs: [ publish, docs, release ]
+    needs: [ publish, release ]
     runs-on: ubuntu-24.04
     permissions:
       contents: write # required for gradle.properties revert

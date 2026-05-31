@@ -101,10 +101,3 @@ jobs:
           ./gradlew publish
           --no-build-cache
           --rerun-tasks
-      - name: "📜 Generate Documentation"
-        run: ./gradlew asciidoctor
-      - name: "🚀 Publish to Github Pages"
-        uses: apache/grails-github-actions/deploy-github-pages@asf
-        env:
-          GRADLE_PUBLISH_RELEASE: 'false'
-          SOURCE_FOLDER: build/docs/manual
