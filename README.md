@@ -1,19 +1,39 @@
-Grails CXF Plugin
+🧩 Grails CXF Plugin
 =========
 
-The 3.x branch of the plugin is a grails plugin that contains simplified features to get simple soap endpoints exposed in grails 3 applications.
+The **5.x** branch of the plugin is an [Apache Grails](https://grails.apache.org/) plugin that contains simplified features to get simple SOAP endpoints
+exposed in Grails 7.x applications using [Apache CXF](https://cxf.apache.org/).
 
-Getting Started
------------
+## 🚀 Getting Started
 
-At the core, this plugin is a simple wrapper for geeting grails service classes wired up as direct soap endpoints.  As many of the previous features from the 2.x branch as could be ported for the initial release were ported.  There will be continued support added for the more complex CXF features going forward.
- 
-Basic Usage
----------
+At the core, this plugin is a simple wrapper for getting Grails service classes wired up as direct SOAP endpoints.
+As many of the previous features from the 2.x branch as could be ported for the initial release were ported.
+There will be continued support added for the more complex CXF features going forward.
+
+Add the following to your `build.gradle` file
+
+### Grails 7
+Not yet released, you will have to do a `./gradlew publishToMavenLocal` first, and then add the dependency:
+
+```groovy
+implementation 'org.grails.plugins:cxf:5.0.0-RC1'
+```
+
+### Grails 5, 6
+```groovy
+compile 'org.grails.plugins:cxf:3.1.2'
+```
+
+### Grails 3, 4
+```groovy
+compile 'org.grails.plugins:cxf:3.1.2'
+```
+
+## 📖 Basic Usage
 
 Exposing a service class is as simple as adding the `GrailsCxfEndpoint` annotation and annotating the methods you wish to expose in the service with `WebMethod` and `WebResult`
 
-```
+```groovy
 package com.gpc.demo
 
 import grails.transaction.Transactional
@@ -34,12 +54,11 @@ class DemoService {
 }
 ```
 
-Returning Domain Classes
-----
+## Returning Domain Classes
 
 If you wish to return domain classes you will need to make sure to add the xml annotations to the domain class.
 
-```
+```groovy
 package org.grails.cxf.test.example
 
 import grails.transaction.Transactional
@@ -61,7 +80,7 @@ class PersonService {
 }
 ```
 
-```
+```groovy
 package org.grails.cxf.test.example
 
 import javax.xml.bind.annotation.XmlAccessType
@@ -83,12 +102,11 @@ class Person {
 }
 ```
 
-Custom Interceptors
------
+## Custom Interceptors
 
-Do add a custom interceptor you should define an bean in your application or imported config class.  The reference to the logging interceptor is the name of the defined bean.
+Do add a custom interceptor you should define a bean in your application or imported config class.  The reference to the logging interceptor is the name of the defined bean.
  
-```
+```groovy
 package org.grails.cxf.test.soap.interceptor
 
 import org.apache.cxf.common.injection.NoJSR250Annotations
@@ -101,8 +119,6 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.logging.Logger
 
-/**
- */
 @NoJSR250Annotations
 class CustomLoggingInInterceptor extends AbstractLoggingInterceptor {
 
@@ -129,7 +145,7 @@ class CustomLoggingInInterceptor extends AbstractLoggingInterceptor {
 }
 ```
 
-```
+```groovy
 package grails.cxf.demo
 
 import grails.boot.GrailsApp
@@ -150,7 +166,7 @@ class Application extends GrailsAutoConfiguration {
 }
 ```
 
-```
+```groovy
 package org.grails.cxf.test.example
 
 import grails.transaction.Transactional
@@ -172,9 +188,9 @@ class PersonService {
 }
 ```
 
-SERVLET MAPPING
----------
-The default behavior is to expose the CxfServlet at the `/services/*` endpoint.  If you with to override this behavior you can set the following config:
+Servlet Mapping
+
+The default behavior is to expose the `CxfServlet` at the `/services/*` endpoint.  If you with to override this behavior you can set the following config:
 
 ```yml
 cxf:
@@ -182,8 +198,8 @@ cxf:
         mapping: /webservices/*
 ```
 
-EXPOSING CLASSES VIA ANNOTATION
------------------
+## Exposing Classes Via Annotation
+
 When using the annotation, the property values will only be used if the corresponding annotation value is not provided or is set to the default value.  The following are available to configure via the annotation:
 
 ```groovy
@@ -277,7 +293,7 @@ class CarService {
 
 **WSDL**
 
-To expose as a wsdl first jax web service endpoint <http://cxf.apache.org/docs/jax-ws-configuration.html> add the wsdl property and classpath to the wsdl as well as setting the endpoint type to `EndpointType.JAX_WS_WSDL`.
+To expose as a wsdl first jax web service endpoint <https://cxf.apache.org/docs/jax-ws-configuration.html> add the wsdl property and classpath to the wsdl as well as setting the endpoint type to `EndpointType.JAX_WS_WSDL`.
 
 ```groovy
 @WebService(name = 'CustomerServiceWsdlEndpoint',
@@ -298,13 +314,13 @@ class AnnotatedCustomerServiceWsdlEndpoint {
 Example *TODO* 
 
 <a name="interceptors"></a>
-**ININTERCEPTORS**
+**INTERCEPTORS**
 
 This is a list of bean names in `List<String>` to inject to the cxf service endpoint.  You will need to define your interceptor beans via normal spring dsl (in resources.groovy for example).
 
 This is helpful when the default cxf annotation of `@org.apache.cxf.interceptor.InInterceptors (interceptors = {"com.example.Test1Interceptor" })` does not satisfy your needs.
 
-When chosing between the this property and the cxf provided one, if you require value injection, the cxf provided annotation will most likely **NOT** meet your needs and you should use this property instead.
+When choosing between the this property and the cxf provided one, if you require value injection, the cxf provided annotation will most likely **NOT** meet your needs and you should use this property instead.
 
 *Note: Make sure to set any beans you wish injected into your interceptors to `bean.autowire = 'byName'` or use the `@Autowire` annotation.*
 
@@ -331,17 +347,17 @@ See above for examples of using inInterceptor which should be very similar.
 Using the annotation will help reduce the clutter of having many static properties in your class to configure cxf.
 
 
-Demo Project
----------
+## Demo Project
+
+Grails 3.x demo application using the 3.1.0 version of the plugin
 https://github.com/Grails-Plugin-Consortium/grails-cxf-demo
 
-LICENSE
----------------
+## License
 
 Copyright 2013 Christian Oestreich
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
