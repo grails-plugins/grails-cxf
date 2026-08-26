@@ -1,0 +1,27 @@
+[[basicUsage]]
+=== Basic Usage
+
+Exposing a service class is as simple as adding the `GrailsCxfEndpoint` annotation and annotating the methods you
+wish to expose in the service with `WebMethod` and `WebResult`.
+
+[source,groovy]
+----
+package com.gpc.demo
+
+import grails.transaction.Transactional
+import org.grails.cxf.utils.GrailsCxfEndpoint
+
+import jakarta.jws.WebMethod
+import jakarta.jws.WebResult
+
+@Transactional
+@GrailsCxfEndpoint
+class DemoService {
+
+    @WebMethod
+    @WebResult
+    String demoMethod() {
+        return "demo"
+    }
+}
+----

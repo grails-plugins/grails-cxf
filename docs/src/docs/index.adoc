@@ -1,0 +1,8 @@
+= Grails CXF Plugin - Reference Documentation
+Grails Plugins
+
+include::introduction.adoc[]
+
+include::usage.adoc[]
+
+include::releaseNotes.adoc[]

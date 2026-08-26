@@ -1,0 +1,8 @@
+[[acknowledgements]]
+=== Acknowledgments
+
+Following are the plugin contributors:
+
+* Christian Oestreich
+* Ryan Crum
+* Ben Doerr

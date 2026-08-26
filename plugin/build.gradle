@@ -1,0 +1,34 @@
+plugins {
+    id 'config.code-coverage'
+    id 'config.code-style'
+    id 'config.compile'
+    id 'config.grails-plugin'
+    id 'config.project-metadata'
+    id 'config.publish'
+    id 'config.testing'
+}
+
+version = projectVersion
+group = projectGroup
+
+dependencies {
+    profile 'org.apache.grails.profiles:plugin'
+    console 'org.apache.grails:grails-console'
+
+    compileOnly platform("org.apache.grails:grails-bom:$grailsVersion")
+    compileOnly 'org.apache.grails:grails-dependencies-starter-web'
+
+    implementation "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    // CXF is exposed as `api`: consumers implement services using CXF/JAXWS
+    // annotations and classes directly (e.g. @WebMethod, AbstractLoggingInterceptor).
+    api "org.apache.cxf:cxf-core:${cxfVersion}"
+    api "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+    api "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
+    api "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    runtimeOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
+
+    testImplementation platform("org.apache.grails:grails-bom:$grailsVersion")
+    testImplementation 'org.apache.grails:grails-dependencies-starter-web'
+    testImplementation 'org.apache.grails:grails-dependencies-test'
+    testImplementation 'org.spockframework:spock-core'
+}

@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Gradle dependencies and wrapper
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "deps"
+    open-pull-requests-limit: 10
+    groups:
+      gradle-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "gradle"
+    ignore:
+      - dependency-name: "gradle"
+        versions: [ ">= 9" ]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "deps"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

@@ -1,0 +1,89 @@
+[[interceptors]]
+=== Custom Interceptors
+
+To add a custom interceptor you should define a bean in your application or an imported config class. The
+reference to the interceptor is the name of the defined bean.
+
+[source,groovy]
+----
+package org.grails.cxf.test.soap.interceptor
+
+import org.apache.cxf.common.injection.NoJSR250Annotations
+import org.apache.cxf.common.logging.LogUtils
+import org.apache.cxf.interceptor.AbstractLoggingInterceptor
+import org.apache.cxf.interceptor.Fault
+import org.apache.cxf.message.Message
+import org.apache.cxf.phase.Phase
+import org.springframework.beans.factory.annotation.Autowired
+
+import java.util.logging.Logger
+
+@NoJSR250Annotations
+class CustomLoggingInInterceptor extends AbstractLoggingInterceptor {
+
+    private static final Logger LOG = LogUtils.getLogger(CustomLoggingInInterceptor)
+    def name
+
+    CustomLoggingInInterceptor() {
+        super(Phase.RECEIVE)
+        log LOG, 'Creating the custom interceptor bean'
+    }
+
+    void handleMessage(Message message) throws Fault {
+        //get another web service bean here by name and call it
+
+        //Check to see if cxf annotations will inject the bean (looks like no!)
+        log LOG, injectedBean?.name ?: 'FAIL - NOT SET'
+        log LOG, "$name :: I AM IN CUSTOM IN LOGGER!!!!!!!"
+    }
+
+    @Override
+    protected Logger getLogger() {
+        LOG
+    }
+}
+----
+
+[source,groovy]
+----
+package grails.cxf.demo
+
+import grails.boot.GrailsApp
+import grails.boot.config.GrailsAutoConfiguration
+import org.grails.cxf.test.soap.interceptor.CustomLoggingInInterceptor
+import org.springframework.context.annotation.Bean
+
+class Application extends GrailsAutoConfiguration {
+    static void main(String[] args) {
+        GrailsApp.run(Application, args)
+    }
+
+    @Bean
+    CustomLoggingInInterceptor customLoggingInInterceptor() {
+        return new CustomLoggingInInterceptor(name: 'injected value')
+    }
+}
+----
+
+[source,groovy]
+----
+package org.grails.cxf.test.example
+
+import grails.transaction.Transactional
+import org.grails.cxf.utils.GrailsCxfEndpoint
+
+import jakarta.jws.WebMethod
+import jakarta.jws.WebParam
+import jakarta.jws.WebResult
+
+@Transactional
+@GrailsCxfEndpoint(inInterceptors = ['customLoggingInInterceptor'])
+class PersonService {
+
+    @WebMethod
+    @WebResult(name = "Person", targetNamespace = "")
+    Person createPerson(@WebParam(name = 'name') String name) {
+        Person.findOrSaveByName(name)
+    }
+}
+----

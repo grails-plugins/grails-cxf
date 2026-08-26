@@ -1,0 +1,5 @@
+[[releaseNotes]]
+== Release Notes
+
+Release notes for each version of this plugin are published on the
+https://github.com/grails-plugins/grails-cxf/releases[GitHub Releases] page.

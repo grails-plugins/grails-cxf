@@ -1,0 +1,12 @@
+[[servletMapping]]
+=== Servlet Mapping
+
+The default behavior is to expose the `CxfServlet` at the `/services/*` endpoint. If you wish to override this
+behavior you can set the following config:
+
+[source,yaml]
+----
+cxf:
+    servlet:
+        mapping: /webservices/*
+----

@@ -1,0 +1,8 @@
+# See https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/exploring-the-dependencies-of-a-repository#changing-the-used-by-package
+# This file associates this repository with packages published to external registries (Maven Central)
+# so that GitHub can display the correct "Used by" package on the repository page.
+# The Package URL (purl) format is defined at https://github.com/package-url/purl-spec
+
+version: 1
+references:
+  - purl: pkg:maven/org.grails.plugins/cxf

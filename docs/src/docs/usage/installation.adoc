@@ -1,0 +1,28 @@
+[[installation]]
+=== Installation
+
+Add the following to your `build.gradle` file:
+
+==== Grails 7
+
+NOTE: Not yet released on Maven Central. Until it is, run `./gradlew publishToMavenLocal` from a checkout of this
+plugin and add `mavenLocal()` to your application's repositories.
+
+[source,groovy]
+----
+implementation 'org.grails.plugins:cxf:5.0.0-RC1'
+----
+
+==== Grails 5, 6
+
+[source,groovy]
+----
+compile 'org.grails.plugins:cxf:3.1.2'
+----
+
+==== Grails 3, 4
+
+[source,groovy]
+----
+compile 'org.grails.plugins:cxf:3.1.2'
+----

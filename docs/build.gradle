@@ -1,0 +1,48 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
+
+plugins {
+    id 'org.asciidoctor.jvm.convert'
+    id 'config.project-metadata'
+}
+
+version = projectVersion
+group = projectGroup
+
+// The plugin subproject is this docs project's name minus the '-docs' suffix
+// (config.docs.gradle's own convention, e.g. 'grails-plugin-template-docs' ->
+// 'grails-plugin-template') — used below instead of hardcoding the plugin's
+// name, so this file works unmodified for any plugin built on the template.
+def pluginProjectName = project.name - '-docs'
+
+def asciidoctorAttributes = [
+        'source-highlighter': 'coderay',
+        toc                 : 'left',
+        toclevels           : '2',
+        'toc-title'         : 'Table of Contents',
+        icons               : 'font',
+        id                  : "${pluginProjectName}:${project.version}",
+        idprefix            : '',
+        idseparator         : '-',
+        version             : project.version,
+        projectUrl          : "https://github.com/${githubOrg}/${githubProject}",
+        sourcedir           : "${rootProject.allprojects.find { it.name == pluginProjectName }.projectDir}/src/main/groovy",
+        grailsVersion       : grailsVersion
+]
+
+tasks.named('asciidoctor', AsciidoctorTask) {
+
+    outputDir = project.layout.buildDirectory.dir('docs')
+    sourceDir = project.layout.projectDirectory.dir('src/docs')
+
+    attributes(asciidoctorAttributes)
+    baseDirFollowsSourceDir()
+    options(doctype: 'book')
+    sources { include 'index.adoc' }
+
+    jvm {
+        jvmArgs(
+                '--add-opens', 'java.base/java.io=ALL-UNNAMED',
+                '--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED'
+        )
+    }
+}
