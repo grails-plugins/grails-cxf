@@ -1,0 +1,6 @@
+[[sourceCode]]
+=== Source code
+
+The full source code for this plugin can be found on https://github.com/grails-plugins/grails-cxf[GitHub].
+
+For issues, improvements or new features go to the plugin's https://github.com/grails-plugins/grails-cxf/issues[GitHub issues].

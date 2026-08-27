@@ -1,0 +1,15 @@
+[[introduction]]
+== Introduction
+
+The **5.x** branch of this plugin is a Grails plugin that contains simplified features to get simple SOAP
+endpoints exposed in Grails 7.x applications using https://cxf.apache.org/[Apache CXF].
+
+At the core, this plugin is a simple wrapper for getting Grails service classes wired up as direct SOAP endpoints.
+As many of the previous features from the 2.x branch as could be ported for the initial release were ported.
+There will be continued support added for the more complex CXF features going forward.
+
+include::introduction/license.adoc[]
+
+include::introduction/acknowledgements.adoc[]
+
+include::introduction/sourceCode.adoc[]

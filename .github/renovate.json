@@ -1,0 +1,71 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(deps)",
+    "group:allNonMajor"
+  ],
+  "labels": [
+    "deps"
+  ],
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "gradle": {
+    "enabled": true,
+    "fileMatch": [
+      "(^|/)build\\.gradle$",
+      "(^|/)settings\\.gradle$",
+      "(^|/)gradle\\.properties$",
+      "build-logic/src/main/groovy/.*\\.gradle$"
+    ]
+  },
+  "gradle-wrapper": {
+    "enabled": true
+  },
+  "github-actions": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Group all Grails dependencies together",
+      "matchPackagePatterns": [
+        "^org\\.apache\\.grails"
+      ],
+      "groupName": "grails"
+    },
+    {
+      "description": "Group all Spring Boot dependencies together",
+      "matchPackagePatterns": [
+        "^org\\.springframework\\.boot"
+      ],
+      "groupName": "spring-boot"
+    },
+    {
+      "description": "Group all GitHub Actions updates together",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github-actions"
+    },
+    {
+      "description": "Group all Spock/testing dependencies together",
+      "matchPackagePatterns": [
+        "^org\\.spockframework"
+      ],
+      "groupName": "spock"
+    },
+    {
+      "description": "Automerge minor and patch updates for dev dependencies",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchPackagePatterns": [
+        "^com\\.adarshr:gradle-test-logger-plugin"
+      ],
+      "automerge": true
+    }
+  ],
+  "ignoreDeps": []
+}

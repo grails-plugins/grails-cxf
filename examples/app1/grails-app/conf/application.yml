@@ -1,0 +1,25 @@
+---
+grails:
+    profile: web
+    codegen:
+        defaultPackage: grails.cxf.example
+info:
+    app:
+        name: '@info.app.name@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+spring:
+    groovy:
+        template:
+            check-template-location: false
+server:
+    port: 8081
+---
+grails:
+    urlmapping:
+        cache:
+            maxsize: 1000
+    controllers:
+        defaultScope: singleton
+    converters:
+        encoding: UTF-8

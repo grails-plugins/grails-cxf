@@ -1,1 +1,58 @@
-rootProject.name = "cxf"
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
+pluginManagement {
+    repositories {
+        if (System.getenv('INCLUDE_MAVEN_LOCAL')) {
+            mavenLocal()
+        }
+        maven { url = 'https://repo.grails.org/grails/restricted' }
+    }
+
+    includeBuild('./build-logic') {
+        it.name = 'build-logic'
+    }
+}
+
+plugins {
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '2.3'
+}
+
+def isCI = System.getenv().containsKey('CI')
+def isLocal = !isCI
+def isReproducibleBuild = System.getenv('SOURCE_DATE_EPOCH') != null
+if (isReproducibleBuild) {
+    gradle.settingsEvaluated {
+        logger.warn(
+                '***** Remote Build Cache Disabled due to Reproducible Build *****\n' +
+                        'Build date will be set to (SOURCE_DATE_EPOCH={})',
+                System.getenv('SOURCE_DATE_EPOCH')
+        )
+    }
+}
+
+buildCache {
+    local { enabled = (isLocal && !isReproducibleBuild) || (isCI && isReproducibleBuild) }
+}
+
+rootProject.name = 'cxf-root'
+
+include('plugin')
+project(':plugin').name = 'cxf'
+include('docs')
+project(':docs').name = 'cxf-docs'
+include('code-coverage')
+
+file('examples').listFiles({ it.directory } as FileFilter).each {
+    include(it.name)
+    project(":$it.name").projectDir = file("examples/$it.name")
+}
+
+dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        if (System.getenv('INCLUDE_MAVEN_LOCAL')) {
+            mavenLocal()
+        }
+        maven { url = 'https://repo.grails.org/grails/restricted' }
+    }
+}

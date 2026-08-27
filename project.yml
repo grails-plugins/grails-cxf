@@ -1,0 +1,34 @@
+---
+project:
+  name: "cxf"
+  title: "Grails CXF Plugin"
+  description: "A Grails plugin that brings easy exposure of service and endpoint classes\
+    \ as Apache CXF SOAP Services to Grails."
+  org: "Grails Plugins"
+github:
+  org: "grails-plugins"
+  project: "grails-cxf"
+license:
+  name: "Apache-2.0"
+contributors:
+  ctoestreich: "Christian Oestreich"
+  bendoerr: "Ben Doerr"
+  ryancrum: "Ryan Crum"
+versions:
+  current: "3.1.2"
+  previous:
+  - "3.1.2"
+  - "3.1.0"
+  - "3.0.14"
+  - "3.0.5"
+  - "3.0.4"
+  - "1.0.6"
+  - "1.0.5"
+  - "1.0.4"
+  - "1.0.3"
+  - "1.0.2"
+  - "1.0.1"
+  - "1.0.0"
+  ignore:
+  - "5.0.x"
+  - "snapshot"

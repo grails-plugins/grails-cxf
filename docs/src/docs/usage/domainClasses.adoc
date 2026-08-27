@@ -1,0 +1,50 @@
+[[domainClasses]]
+=== Returning Domain Classes
+
+If you wish to return domain classes you will need to make sure to add the XML annotations to the domain class.
+
+[source,groovy]
+----
+package org.grails.cxf.test.example
+
+import grails.transaction.Transactional
+import org.grails.cxf.utils.GrailsCxfEndpoint
+
+import jakarta.jws.WebMethod
+import jakarta.jws.WebParam
+import jakarta.jws.WebResult
+
+@Transactional
+@GrailsCxfEndpoint
+class PersonService {
+
+    @WebMethod
+    @WebResult(name = "Person", targetNamespace = "")
+    Person createPerson(@WebParam(name = 'name') String name) {
+        Person.findOrSaveByName(name)
+    }
+}
+----
+
+[source,groovy]
+----
+package org.grails.cxf.test.example
+
+import jakarta.xml.bind.annotation.XmlAccessType
+import jakarta.xml.bind.annotation.XmlAccessorType
+import jakarta.xml.bind.annotation.XmlElement
+
+@XmlAccessorType(XmlAccessType.NONE)
+class Person {
+
+    @XmlElement
+    Long id
+
+    @XmlElement
+    String name
+
+    static constraints = {
+        name nullable: false, blank: false
+    }
+}
+----

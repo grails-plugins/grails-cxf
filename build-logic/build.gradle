@@ -1,0 +1,16 @@
+plugins {
+    id 'groovy-gradle-plugin'
+}
+
+def gradleProperties = new Properties()
+file('../gradle.properties').withInputStream { gradleProperties.load(it) }
+
+dependencies {
+    implementation platform("org.apache.grails:grails-bom:${gradleProperties.grailsVersion}")
+    implementation 'org.apache.groovy:groovy-yaml'
+    implementation 'cloud.wondrify:asset-pipeline-gradle'
+    implementation "com.adarshr:gradle-test-logger-plugin:${gradleProperties.testLoggerVersion}"
+    implementation 'org.apache.grails:grails-gradle-plugins'
+    implementation 'org.apache.grails.gradle:grails-publish'
+    implementation "org.asciidoctor.jvm.convert:org.asciidoctor.jvm.convert.gradle.plugin:${gradleProperties.asciidoctorVersion}"
+}
