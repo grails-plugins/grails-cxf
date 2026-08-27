@@ -17,7 +17,7 @@ class EndpointRegistrationUtilSpec extends Specification {
         EndpointRegistrationUtil.wireEndpoints(applicationContext)
 
         then:
-        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint.class) >> ['fooService': new FooService()]
+        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint) >> ['fooService': new FooService()]
         1 * applicationContext.getBean(Bus.DEFAULT_BUS_ID) >> bus
     }
 
@@ -27,7 +27,7 @@ class EndpointRegistrationUtilSpec extends Specification {
 
         then:
         thrown(RuntimeException)
-        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint.class) >> ['fooClass': new FooClass()]
+        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint) >> ['fooClass': new FooClass()]
         1 * applicationContext.getBean(Bus.DEFAULT_BUS_ID) >> bus
     }
 
@@ -36,7 +36,7 @@ class EndpointRegistrationUtilSpec extends Specification {
         EndpointRegistrationUtil.wireEndpoints(applicationContext)
 
         then:
-        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint.class) >> ['fooEndpoint': new FooEndpoint()]
+        1 * applicationContext.getBeansWithAnnotation(GrailsCxfEndpoint) >> ['fooEndpoint': new FooEndpoint()]
         1 * applicationContext.getBean(Bus.DEFAULT_BUS_ID) >> bus
     }
 }

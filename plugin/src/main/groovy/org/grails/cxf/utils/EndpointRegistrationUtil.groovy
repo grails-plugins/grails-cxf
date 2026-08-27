@@ -20,9 +20,9 @@ import jakarta.xml.ws.soap.SOAPBinding
 @CompileStatic
 class EndpointRegistrationUtil {
 
-    public static void wireEndpoints(ApplicationContext context) {
+    static void wireEndpoints(ApplicationContext context) {
 
-        Map<String, Object> beansWithAnnotation = context.getBeansWithAnnotation(GrailsCxfEndpoint.class)
+        Map<String, Object> beansWithAnnotation = context.getBeansWithAnnotation(GrailsCxfEndpoint)
         if (beansWithAnnotation) {
             Bus bus = (Bus) context.getBean(Bus.DEFAULT_BUS_ID)
             for (Map.Entry<String, Object> entry : beansWithAnnotation.entrySet()) {
@@ -40,7 +40,7 @@ class EndpointRegistrationUtil {
 
     private static void publishEndpointUrl(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation) {
         String url = getPublishUrl(implementor, annotation)
-        log.info('Endpoint [' + implementor.class + '] configured to use url ' + url + '.');
+        log.info('Endpoint [' + implementor.class + '] configured to use url ' + url + '.')
         if (!url || url == '/') {
             throw new RuntimeException('Endpoint could not be wired due to endpoint url not being set.  Check [' + implementor.class + '] to ensure address property is set')
         } else {
@@ -48,7 +48,7 @@ class EndpointRegistrationUtil {
         }
     }
 
-    private static void setServiceAndPortName(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation){
+    private static void setServiceAndPortName(EndpointImpl endpoint, Object implementor, GrailsCxfEndpoint annotation) {
         if (annotation != null) {
             addServiceName(annotation, implementor, endpoint)
             addPortName(annotation, implementor, endpoint)
@@ -72,12 +72,12 @@ class EndpointRegistrationUtil {
         GrailsCxfEndpoint annotation = null
         if (implementor instanceof Advised) {
             try {
-                annotation = ((Advised) implementor).getTargetSource().getTarget().getClass().getAnnotation(GrailsCxfEndpoint.class)
+                annotation = ((Advised) implementor).getTargetSource().getTarget().getClass().getAnnotation(GrailsCxfEndpoint)
             } catch (Exception e) {
                 log.error('Could not wire AOP Proxied endpoint.', e)
             }
         } else {
-            annotation = implementor.getClass().getAnnotation(GrailsCxfEndpoint.class)
+            annotation = implementor.getClass().getAnnotation(GrailsCxfEndpoint)
         }
         annotation
     }
@@ -101,7 +101,7 @@ class EndpointRegistrationUtil {
     }
 
     private static String getNamespaceURI(implementor) {
-        'http://' + implementor.getClass().package.name.split('\\.').reverse().join(".")
+        'http://' + implementor.getClass().package.name.split('\\.').reverse().join('.')
     }
 
     private static void addWsdl(GrailsCxfEndpoint annotation, EndpointImpl endpoint) {
@@ -121,7 +121,7 @@ class EndpointRegistrationUtil {
         try {
             for (String inInterceptorName : annotation.inInterceptors()) {
                 endpoint.getServer().getEndpoint().getInInterceptors().add(getInterceptor(context, inInterceptorName))
-                log.info('Endpoint [' + endpoint.address + '] configured to use in interceptor bean ' + inInterceptorName + '.');
+                log.info('Endpoint [' + endpoint.address + '] configured to use in interceptor bean ' + inInterceptorName + '.')
             }
         } catch (BeansException e) {
             log.error('Could not wire in interceptors', e)
@@ -133,7 +133,7 @@ class EndpointRegistrationUtil {
         try {
             for (String inFaultInterceptorName : annotation.inFaultInterceptors()) {
                 endpoint.getServer().getEndpoint().getInFaultInterceptors().add(getInterceptor(context, inFaultInterceptorName))
-                log.info('Endpoint [' + endpoint.address + '] configured to use in fault interceptor bean ' + inFaultInterceptorName + '.');
+                log.info('Endpoint [' + endpoint.address + '] configured to use in fault interceptor bean ' + inFaultInterceptorName + '.')
             }
         } catch (BeansException e) {
             log.error('Could not wire in interceptors', e)
@@ -145,7 +145,7 @@ class EndpointRegistrationUtil {
         try {
             for (String outInterceptorName : annotation.outInterceptors()) {
                 endpoint.getServer().getEndpoint().getOutInterceptors().add(getInterceptor(context, outInterceptorName))
-                log.info('Endpoint [' + endpoint.address + '] configured to use out interceptor bean ' + outInterceptorName + '.');
+                log.info('Endpoint [' + endpoint.address + '] configured to use out interceptor bean ' + outInterceptorName + '.')
             }
         } catch (BeansException e) {
             log.error('Could not wire out interceptors', e)
@@ -157,26 +157,25 @@ class EndpointRegistrationUtil {
         try {
             for (String outFaultInterceptorName : annotation.outFaultInterceptors()) {
                 endpoint.getServer().getEndpoint().getOutFaultInterceptors().add(getInterceptor(context, outFaultInterceptorName))
-                log.info('Endpoint [' + endpoint.address + '] configured to use out fault interceptor bean ' + outFaultInterceptorName + '.');
+                log.info('Endpoint [' + endpoint.address + '] configured to use out fault interceptor bean ' + outFaultInterceptorName + '.')
             }
         } catch (BeansException e) {
             log.error('Could not wire out fault interceptors', e)
         }
     }
 
-    public static Interceptor<? extends Message> getInterceptor(ApplicationContext context, String inInterceptorName) {
+    static Interceptor<? extends Message> getInterceptor(ApplicationContext context, String inInterceptorName) {
         (Interceptor<? extends Message>) context.getBean(inInterceptorName)
     }
-
 
     private static void addProperties(GrailsCxfEndpoint annotation, implementor, EndpointImpl endpoint) {
         if (annotation?.properties()?.length > 0) {
             Map<String, Object> properties = [:]
             for (GrailsCxfEndpointProperty prop : annotation.properties()) {
-                properties.put(prop.name(), prop.value());
+                properties.put(prop.name(), prop.value())
             }
             if (properties) {
-                log.info('Endpoint [' + implementor.class + '] configured to use properties ' + properties + '.');
+                log.info('Endpoint [' + implementor.class + '] configured to use properties ' + properties + '.')
                 endpoint.getServerFactory().properties = properties
             }
         }
@@ -187,7 +186,7 @@ class EndpointRegistrationUtil {
         String url = ''
         if (implementor instanceof Advised) {
             try {
-                annotation = ((Advised) implementor).getTargetSource().getTarget().getClass().getAnnotation(GrailsCxfEndpoint.class)
+                annotation = ((Advised) implementor).getTargetSource().getTarget().getClass().getAnnotation(GrailsCxfEndpoint)
                 if (annotation != null) {
                     url = annotation.address()
                 }
@@ -204,7 +203,7 @@ class EndpointRegistrationUtil {
 
     private static String getNameNoPostfix(Object endpoint) {
         String className = endpoint?.class?.simpleName
-        String url = ""
+        String url = ''
         if (className?.endsWith(ServiceArtefactHandler.TYPE)) {
             url = StringUtils.removeEnd(className, ServiceArtefactHandler.TYPE)
         }

@@ -9,7 +9,8 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 
 @Slf4j
 class CxfGrailsPlugin extends Plugin {
-    def grailsVersion = "7.0.0 > *"
+
+    def grailsVersion = '7.0.0 > *'
     def pluginExcludes = [
             'grails-app/views/error.gsp',
             'grails-app/conf/spring/ApplicationResources.groovy',
@@ -32,28 +33,28 @@ class CxfGrailsPlugin extends Plugin {
             'codenarc.properties'
     ]
 
-    def name = "cxf"
+    def name = 'cxf'
     def author = 'Grails Plugins'
     def authorEmail = ''
     def title = 'CXF plug-in for Grails'
     def description = 'Brings easy exposure of service and endpoint classes as Apache CXF SOAP Services to Grails.'
 
     def developers = [
-            [name: "Christian Oestreich", email: "acetrike@gmail.com"],
-            [name: "Ryan Crum", email: "ryan.j.crum@gmail.com"],
-            [name: "Ben Doerr", email: "craftsman@bendoerr.me"]]
+            [name: 'Christian Oestreich', email: 'acetrike@gmail.com'],
+            [name: 'Ryan Crum', email: 'ryan.j.crum@gmail.com'],
+            [name: 'Ben Doerr', email: 'craftsman@bendoerr.me']]
 
-    def documentation = "https://github.com/grails-plugins/grails-cxf"
-    def license = "APACHE"
-    def issueManagement = [system: "GITHUB", url: "https://github.com/grails-plugins/grails-cxf/issues"]
-    def scm = [url: "https://github.com/grails-plugins/grails-cxf"]
+    def documentation = 'https://github.com/grails-plugins/grails-cxf'
+    def license = 'APACHE'
+    def issueManagement = [system: 'GITHUB', url: 'https://github.com/grails-plugins/grails-cxf/issues']
+    def scm = [url: 'https://github.com/grails-plugins/grails-cxf']
 
     Closure doWithSpring() {
         { ->
 
             log.info 'Wiring the cxf plugin'
-            String servletMapping = config.cxf.servlet.mapping ?: "/services/*"
-            if (!servletMapping.endsWith("/*")) {
+            String servletMapping = config.cxf.servlet.mapping ?: '/services/*'
+            if (!servletMapping.endsWith('/*')) {
                 throw new RuntimeException("Custom servlet mapping should end with the suffix '/*' ie. '/webservices/*'")
             }
             cxfServlet(ServletRegistrationBean, new CXFServlet(), servletMapping) {

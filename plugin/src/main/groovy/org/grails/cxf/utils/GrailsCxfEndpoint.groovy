@@ -11,6 +11,7 @@ import java.lang.annotation.Target
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @interface GrailsCxfEndpoint {
+
     String address() default ''
     //this is the serviceName (localpart) attribute
     String name() default ''
@@ -29,6 +30,7 @@ import java.lang.annotation.Target
 
 @Target(ElementType.METHOD)
 @interface GrailsCxfEndpointProperty {
-    public String name() default ''
-    public String value() default ''
+
+    String name() default ''
+    String value() default ''
 }
