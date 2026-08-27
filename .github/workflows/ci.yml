@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: "Export .sdkmanrc properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
         with:
@@ -30,7 +30,7 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
@@ -50,7 +50,7 @@ jobs:
       - name: "Output Agent IP" # in the event your agent has network issues, you can use this to debug
         run: curl -s https://api.ipify.org
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: "Export .sdkmanrc properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
@@ -68,7 +68,7 @@ jobs:
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
@@ -100,7 +100,7 @@ jobs:
       - name: "Output Agent IP" # in the event your agent has network issues, you can use this to debug
         run: curl -s https://api.ipify.org
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: "Export .sdkmanrc properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
         with:
@@ -109,7 +109,7 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
@@ -118,7 +118,7 @@ jobs:
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}

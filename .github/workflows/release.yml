@@ -40,7 +40,7 @@ jobs:
       - name: "Output Agent IP" # in the event RAO blocks this agent, this can be used to debug it
         run: curl -s https://api.ipify.org
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ env.TAG }}
@@ -61,14 +61,14 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
@@ -93,7 +93,7 @@ jobs:
       - name: "Generate Build Date file"
         run: echo "$SOURCE_DATE_EPOCH" >> build/BUILD_DATE.txt
       - name: "Upload Build Date file"
-        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228
         with:
           files: build/BUILD_DATE.txt
         env:
@@ -109,7 +109,7 @@ jobs:
       - name: "📝 Establish release version"
         run: echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ env.TAG }}
@@ -121,14 +121,14 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
@@ -154,7 +154,7 @@ jobs:
       - name: "📝 Establish release version"
         run: echo "VERSION=${TAG#v}" >> "$GITHUB_ENV"
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ env.TAG }}
@@ -166,14 +166,14 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
@@ -207,7 +207,7 @@ jobs:
       pull-requests: write # to create the PR that will increment the version
     steps:
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ env.TAG }}
           token: ${{ secrets.GITHUB_TOKEN }}
