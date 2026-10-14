@@ -31,7 +31,7 @@ my-plugin/
 │   └── dependency-graph/
 │       └── external-references.yml  # Maven Central package association
 │
-├── build-logic/                # Gradle convention plugins (composite build)
+├── conventions/                # Gradle convention plugins (composite build)
 │   ├── build.gradle            # Plugin dependencies (groovy-gradle-plugin)
 │   ├── settings.gradle         # Build-logic project settings
 │   ├── config/                 # Shared code style config files
@@ -129,7 +129,7 @@ All tests requiring a running Grails application live in example apps under `exa
 
 ### 4. Build logic is centralized
 
-Convention plugins in `build-logic/` eliminate all duplication:
+Convention plugins in `conventions/` eliminate all duplication:
 
 - Compilation settings: `config.compile.gradle`
 - Test configuration: `config.testing.gradle`
@@ -172,8 +172,8 @@ These are available in all subprojects as project properties (`projectVersion`, 
 
 ## Adding a New Convention Plugin
 
-1. Create a new file: `build-logic/src/main/groovy/config.<name>.gradle`
-2. If the plugin applies third-party plugins, add their dependencies to `build-logic/build.gradle`
+1. Create a new file: `conventions/src/main/groovy/config.<name>.gradle`
+2. If the plugin applies third-party plugins, add their dependencies to `conventions/build.gradle`
 3. Apply the new plugin ID in the relevant subproject(s)
 4. Keep the plugin focused on a single concern
 

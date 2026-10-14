@@ -15,9 +15,11 @@ updates:
           - "*"
         exclude-patterns:
           - "gradle"
+    # The wrapper follows the Grails line a repository is on (Gradle 8 for Grails 7, Gradle 9 for Grails 8), so it
+    # only gets minor and patch updates. Dependabot names the wrapper `gradle-wrapper`, not `gradle`.
     ignore:
-      - dependency-name: "gradle"
-        versions: [ ">= 9" ]
+      - dependency-name: "gradle-wrapper"
+        update-types: [ "version-update:semver-major" ]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"

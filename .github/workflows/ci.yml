@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: "Export .sdkmanrc properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
         with:
@@ -30,7 +30,7 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
@@ -50,7 +50,7 @@ jobs:
       - name: "Output Agent IP" # in the event your agent has network issues, you can use this to debug
         run: curl -s https://api.ipify.org
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: "Export .sdkmanrc properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
@@ -68,7 +68,7 @@ jobs:
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
@@ -88,6 +88,24 @@ jobs:
           --continue
           --stacktrace
           --rerun-tasks
+      - name: "☕️ Setup JDK 21 for the convention plugin tests"
+        # GrailsLineSpec also builds a Grails 8 consumer, whose Gradle plugin needs Java 21
+        id: setup-java-21
+        if: ${{ github.repository == 'grails-plugins/grails-plugin-template' && !contains(github.event.head_commit.message, '[skip tests]') }}
+        uses: actions/setup-java@v6
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: 21
+          set-default: false
+      - name: "🧪 Test convention plugins"
+        # template-only: synced repos consume the published plugin and have no conventions/ directory. It is an
+        # included build, so `./gradlew build` does not run its tests.
+        if: ${{ github.repository == 'grails-plugins/grails-plugin-template' && !contains(github.event.head_commit.message, '[skip tests]') }}
+        env:
+          JAVA_HOME: ${{ steps.setup-java-21.outputs.path }}
+        run: >
+          ./gradlew -p conventions test
+          --stacktrace
   publish:
     # only run the publishing task on this repo (not on forks), and never in the
     # template repo itself — grails-plugin-template has no Maven coordinates of its
@@ -100,7 +118,7 @@ jobs:
       - name: "Output Agent IP" # in the event your agent has network issues, you can use this to debug
         run: curl -s https://api.ipify.org
       - name: "📥 Checkout repository"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: "Export .sdkmanrc properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
         with:
@@ -109,7 +127,7 @@ jobs:
       - name: "Determine Java Version"
         run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
       - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.SDKMANRC_java }}
@@ -118,7 +136,7 @@ jobs:
       - name: "Export gradle.properties properties"
         uses: apache/grails-github-actions/export-gradle-properties@asf
       - name: "🐘 Setup Gradle"
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@v6
         with:
           build-scan-publish: ${{ env.ciBuildScanPublish }}
           build-scan-terms-of-use-url: ${{ env.ciBuildScanTermsOfUseUrl }}
@@ -148,4 +166,5 @@ jobs:
     uses: ./.github/workflows/update-versions.yml
     permissions:
       contents: write
+      pull-requests: write
     secrets: inherit

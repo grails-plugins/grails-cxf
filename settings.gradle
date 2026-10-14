@@ -2,16 +2,42 @@ import org.gradle.api.initialization.resolve.RepositoriesMode
 
 pluginManagement {
     repositories {
+        // >>> grails-plugin-conventions (managed by grails-plugin-template files-sync, do not edit)
+        mavenCentral()
+        // <<< grails-plugin-conventions
         if (System.getenv('INCLUDE_MAVEN_LOCAL')) {
             mavenLocal()
         }
         maven { url = 'https://repo.grails.org/grails/restricted' }
     }
 
-    includeBuild('./build-logic') {
-        it.name = 'build-logic'
+    // >>> grails-plugin-conventions (managed by grails-plugin-template files-sync, do not edit)
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id.startsWith('config.')) {
+                useModule('org.grails.plugins.gradle:grails-plugin-conventions:1.0.0-RC3')
+            }
+        }
+    }
+    // <<< grails-plugin-conventions
+}
+
+// >>> grails-plugin-conventions (managed by grails-plugin-template files-sync, do not edit)
+buildscript {
+    repositories {
+        if (System.getenv('INCLUDE_MAVEN_LOCAL')) {
+            mavenLocal()
+        }
+        maven { url = 'https://repo.grails.org/grails/restricted' }
+    }
+    dependencies {
+        classpath platform("org.apache.grails:grails-bom:${grailsVersion}")
+        classpath 'org.apache.grails:grails-gradle-plugins'
+        classpath 'cloud.wondrify:asset-pipeline-gradle'
+        classpath 'org.apache.grails.gradle:grails-publish'
     }
 }
+// <<< grails-plugin-conventions
 
 plugins {
     id 'com.gradle.common-custom-user-data-gradle-plugin' version '2.3'

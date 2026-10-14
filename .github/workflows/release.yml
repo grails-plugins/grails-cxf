@@ -195,7 +195,51 @@ jobs:
       branch: ${{ github.event.release.target_commitish }}
     permissions:
       contents: write
+      pull-requests: write
     secrets: inherit
+  notify-slack:
+    name: "Notify Slack"
+    needs: [ release ]
+    runs-on: ubuntu-24.04
+    permissions: { }
+    env:
+      # Optional: set a SLACK_WEBHOOK_URL secret (repository, or the organization) to announce the release in Slack.
+      # Without it the steps below are skipped. The secrets context is not available in `if:`, hence the env.
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: "🔕 No Slack webhook configured"
+        if: ${{ env.SLACK_WEBHOOK_URL == '' }}
+        run: echo "::notice::SLACK_WEBHOOK_URL is not set — skipping the Slack notification"
+      - name: "📝 Build Slack message"
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          # Built with jq so quotes or newlines in the tag or release notes cannot break the JSON payload.
+          # Slack limits a section's text to 3000 characters.
+          notes=$(printf '%s' "${RELEASE_BODY}" | tr -d '\r' | head -c 2800)
+          [ -n "${notes}" ] || notes="No release notes provided."
+          jq -n \
+            --arg tag "${RELEASE_TAG}" \
+            --arg url "${RELEASE_URL}" \
+            --arg repository "${REPOSITORY}" \
+            --arg notes "${notes}" \
+            '{
+              text: (":rocket: *" + $repository + "* just released *" + $tag + "*"),
+              blocks: [
+                { type: "section",
+                  text: { type: "mrkdwn", text: (":rocket: *<" + $url + "|" + $tag + ">* of *" + $repository + "* has been released") } },
+                { type: "section", text: { type: "mrkdwn", text: $notes } }
+              ]
+            }' > slack-payload.json
+      - name: "📣 Send Slack message"
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload-file-path: slack-payload.json
   close:
     name: "To Next Version"
     environment: close # this step will be delayed until approved

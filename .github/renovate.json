@@ -16,8 +16,7 @@
     "fileMatch": [
       "(^|/)build\\.gradle$",
       "(^|/)settings\\.gradle$",
-      "(^|/)gradle\\.properties$",
-      "build-logic/src/main/groovy/.*\\.gradle$"
+      "(^|/)gradle\\.properties$"
     ]
   },
   "gradle-wrapper": {
