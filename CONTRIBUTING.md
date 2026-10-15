@@ -41,7 +41,7 @@ sdk env install
 .
 ├── plugin/              # The publishable Grails plugin (source + unit tests ONLY)
 ├── examples/app1/       # Example app with integration tests
-├── build-logic/         # Gradle convention plugins (shared build configuration)
+├── conventions/         # Gradle convention plugins (shared build configuration)
 ├── docs/                # Asciidoctor documentation
 └── .agents/skills/      # AI agent skills (.claude is a symlink to .agents)
 ```
@@ -51,7 +51,7 @@ Key architectural rules:
 - **Plugin module** contains only plugin source code and unit tests – no integration tests, no example controllers.
 - **Example apps** under `examples/` host all integration and functional tests. They depend on the plugin as a real
   consumer would.
-- **Convention plugins** in `build-logic/` deduplicate build configuration. Never use `subprojects {}`,
+- **Convention plugins** in `conventions/` deduplicate build configuration. Never use `subprojects {}`,
   `allprojects {}`, or `configure()` blocks in the root `build.gradle`.
 
 ## Building and Testing
@@ -123,7 +123,7 @@ categorize changes in release notes.
 
 - Always use lazy APIs: `tasks.register()`, `tasks.named()`, `configureEach`, `provider {}`
 - Never use eager task creation (`tasks.create()`, `project.task()`)
-- If two or more subprojects share build logic, extract it into a convention plugin in `build-logic/`
+- If two or more subprojects share build logic, extract it into a convention plugin in `conventions/`
 
 ## Submitting a Pull Request
 
