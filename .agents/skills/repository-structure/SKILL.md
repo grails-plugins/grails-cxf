@@ -208,7 +208,8 @@ These are available in all subprojects as project properties (`projectVersion`, 
 ## SDK Management
 
 The `.sdkmanrc` file pins exact SDK versions. Run `sdk env install` to install them. CI reads `.sdkmanrc` to determine
-the Java version dynamically.
+the Java version dynamically. `.sdkmanrc` and the Gradle wrapper are not overwritten by the template sync — each repo
+owns them, and CI fails if `.sdkmanrc`'s `gradle` version differs from the wrapper's `distributionUrl`.
 
 ## CI/CD Pipeline
 
