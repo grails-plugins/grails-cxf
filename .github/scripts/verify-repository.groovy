@@ -189,7 +189,8 @@ if (sdkmanrcFile.exists()) {
         def m = distUrl =~ /gradle-([0-9.]+)-/
         if (m.find() && m.group(1) != sdkmanrc.getProperty('gradle')) {
             err(".sdkmanrc gradle version ('${sdkmanrc.getProperty('gradle')}') does not match the wrapper's " +
-                "distributionUrl version ('${m.group(1)}')")
+                "distributionUrl version ('${m.group(1)}') — update one to match the other, e.g. " +
+                "./gradlew wrapper --gradle-version ${sdkmanrc.getProperty('gradle')}")
         }
     }
 }
