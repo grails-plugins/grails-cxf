@@ -22,26 +22,8 @@ jobs:
     steps:
       - name: "📥 Checkout repository"
         uses: actions/checkout@v7
-      - name: "Export .sdkmanrc properties"
-        uses: apache/grails-github-actions/export-gradle-properties@asf
-        with:
-          file: ".sdkmanrc"
-          prefix: "SDKMANRC_"
-      - name: "Determine Java Version"
-        run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
-      - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v6
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.SDKMANRC_java }}
-      - name: "🦊 Install Groovy ${{ env.SDKMANRC_groovy }}"
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install groovy ${{ env.SDKMANRC_groovy }} < /dev/null
-          echo "$HOME/.sdkman/candidates/groovy/current/bin" >> $GITHUB_PATH
       - name: "🔍 Verify repository structure"
-        run: groovy .github/scripts/verify-repository.groovy
+        run: bash .github/scripts/groovy.sh .github/scripts/verify-repository.groovy
   build:
     name: "Build & Test"
     needs: verify

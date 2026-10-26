@@ -17,9 +17,6 @@ permissions:
   contents: write
   pull-requests: write
 
-env:
-  JAVA_DISTRIBUTION: 'liberica'
-
 jobs:
   update-versions:
     runs-on: ubuntu-24.04
@@ -46,7 +43,7 @@ jobs:
       - name: "🔑 Mint GitHub App token"
         id: app-token
         if: steps.app-creds.outputs.available == 'true'
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -58,33 +55,11 @@ jobs:
           token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      - name: "Export .sdkmanrc properties"
-        uses: apache/grails-github-actions/export-gradle-properties@asf
-        with:
-          file: ".sdkmanrc"
-          prefix: "SDKMANRC_"
-
-      - name: "Determine Java Version"
-        run: echo "SDKMANRC_java=${{ env.SDKMANRC_java }}" | sed 's/-.*//' >> $GITHUB_ENV
-
-      - name: "☕️ Setup JDK"
-        uses: actions/setup-java@v6
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.SDKMANRC_java }}
-
-      - name: "🦊 Install Groovy ${{ env.SDKMANRC_groovy }}"
-        run: |
-          curl -s "https://get.sdkman.io" | bash
-          source "$HOME/.sdkman/bin/sdkman-init.sh"
-          sdk install groovy ${{ env.SDKMANRC_groovy }} < /dev/null
-          echo "$HOME/.sdkman/candidates/groovy/current/bin" >> $GITHUB_PATH
-
       - name: "🔢 Update versions in project.yml and generate index.html"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: groovy .github/scripts/update-versions.groovy
+        run: bash .github/scripts/groovy.sh .github/scripts/update-versions.groovy
 
       - name: "📝 Commit project.yml if changed"
         env:
