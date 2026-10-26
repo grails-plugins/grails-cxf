@@ -15,7 +15,7 @@ pluginManagement {
     resolutionStrategy {
         eachPlugin {
             if (requested.id.id.startsWith('config.')) {
-                useModule('org.grails.plugins.gradle:grails-plugin-conventions:1.0.0-RC3')
+                useModule('org.grails.plugins.gradle:grails-plugin-conventions:1.0.0-RC4')
             }
         }
     }
@@ -40,7 +40,7 @@ buildscript {
 // <<< grails-plugin-conventions
 
 plugins {
-    id 'com.gradle.common-custom-user-data-gradle-plugin' version '2.3'
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '2.8.0'
 }
 
 def isCI = System.getenv().containsKey('CI')
