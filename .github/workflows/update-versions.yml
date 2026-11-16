@@ -46,7 +46,7 @@ jobs:
       - name: "🔑 Mint GitHub App token"
         id: app-token
         if: steps.app-creds.outputs.available == 'true'
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
